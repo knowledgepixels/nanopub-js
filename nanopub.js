@@ -1,8 +1,10 @@
+const grlcNpApiUrl = 'https://grlc.nps.petapico.org/api/local/local/';
+
 function getUpdateStatus(elementId, npUri) {
   document.getElementById(elementId).innerHTML = "<em>Checking for updates...</em>";
-  const apiUrl = 'https://grlc.nps.petapico.org/api/local/local/get_latest_version?np=' + npUri;
+  requestUrl = grlcNpApiUrl + '/get_latest_version?np=' + npUri;
   var r = new XMLHttpRequest();
-  r.open('GET', apiUrl, true);
+  r.open('GET', requestUrl, true);
   r.setRequestHeader('Accept', 'application/json');
   r.responseType = 'json';
   r.onload = function() {
