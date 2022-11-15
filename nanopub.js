@@ -1,4 +1,4 @@
-var getUpdateStatus = function(elementId, npUri) {
+function getUpdateStatus(elementId, npUri) {
   document.getElementById(elementId).innerHTML = "<em>Checking for updates...</em>";
   const apiUrl = 'https://grlc.nps.petapico.org/api/local/local/get_latest_version?np=' + npUri;
   var r = new XMLHttpRequest();
