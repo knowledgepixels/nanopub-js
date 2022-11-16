@@ -1,8 +1,19 @@
-const grlcNpApiUrl = 'https://grlc.nps.petapico.org/api/local/local/';
+const grlcNpApiUrls = ['https://grlc.nps.petapico.org/api/local/local/'];
+//const grlcNpApiUrls = ['https://test1.com/foo', 'https://grlc.nps.petapico.org/api/local/local/', 'https://test2.com/bar'];
 
 function getUpdateStatus(elementId, npUri) {
   document.getElementById(elementId).innerHTML = "<em>Checking for updates...</em>";
-  requestUrl = grlcNpApiUrl + '/get_latest_version?np=' + npUri;
+  getUpdateStatusX(elementId, npUri, [...grlcNpApiUrls]);
+}
+
+function getUpdateStatusX(elementId, npUri, apiUrls) {
+  if (apiUrls.length == 0) {
+    document.getElementById(elementId).innerHTML = "<em>An error has occurred while checking for updates.</en>";
+    return;
+  }
+  var apiUrl = apiUrls.shift();
+  //console.log('Trying ' + apiUrl);
+  requestUrl = apiUrl + '/get_latest_version?np=' + npUri;
   var r = new XMLHttpRequest();
   r.open('GET', requestUrl, true);
   r.setRequestHeader('Accept', 'application/json');
@@ -25,10 +36,13 @@ function getUpdateStatus(elementId, npUri) {
           h += ' <code><a href="' + l + '">' + l + '</a></code>';
         }
       }
+      document.getElementById(elementId).innerHTML = h;
     } else {
-      h = "<em>An error has occurred while checking for updates.</en>";
+      getUpdateStatusX(elementId, npUri, apiUrls);
     }
-    document.getElementById(elementId).innerHTML = h;
   };
+  r.onerror = function(error) {
+    getUpdateStatusX(elementId, npUri, apiUrls);
+  }
   r.send();
-};
+}
